@@ -1,3 +1,5 @@
+# 네트워크
+
 ## HTTP + S(Secure)
 
 HTTPS는 HTTP의 문제점을 보완하기 위해 나온 프로토콜이다. HTTP의 보안적인 문제점은 다음과 같다.
@@ -67,8 +69,4 @@ SSL 인증서는 신뢰할 수 있는 서버임을 알려주는 동시에 SSL �
 
 서버에서 클라이언트로 보내는 nonce 값을 복호화하는 것은 서버의 인증서를 받으면 모두가 할 수 있다. 암호화되지 않은 통신이라는 뜻인데, 이럴때 공통의 비밀 키를 공유할 수 있도록 하는 것이 Diffie–Hellman 키 교환이다. 자세한 것은 알 수 없지만 master secret을 만들기 위해서는 nonce가 두 개 필요하기 때문일 것이다.
 
-> **_참고_**
-> [https://opentutorials.org/course/228/4894](https://opentutorials.org/course/228/4894)
-> [https://wayhome25.github.io/cs/2018/03/11/ssl-https/](https://wayhome25.github.io/cs/2018/03/11/ssl-https/)
-> [https://ko.wikipedia.org/wiki/디피-헬먼*키*교환](https://ko.wikipedia.org/wiki/%EB%94%94%ED%94%BC-%ED%97%AC%EB%A8%BC_%ED%82%A4_%EA%B5%90%ED%99%98)
-> [https://security.stackexchange.com/questions/89383/why-does-the-ssl-tls-handshake-have-a-client-and-server-random](https://security.stackexchange.com/questions/89383/why-does-the-ssl-tls-handshake-have-a-client-and-server-random)
+> **_참고_** > [https://opentutorials.org/course/228/4894](https://opentutorials.org/course/228/4894) > [https://wayhome25.github.io/cs/2018/03/11/ssl-https/](https://wayhome25.github.io/cs/2018/03/11/ssl-https/) > [https://ko.wikipedia.org/wiki/디피-헬먼*키*교환](https://ko.wikipedia.org/wiki/%EB%94%94%ED%94%BC-%ED%97%AC%EB%A8%BC_%ED%82%A4_%EA%B5%90%ED%99%98) > [https://security.stackexchange.com/questions/89383/why-does-the-ssl-tls-handshake-have-a-client-and-server-random](https://security.stackexchange.com/questions/89383/why-does-the-ssl-tls-handshake-have-a-client-and-server-random)

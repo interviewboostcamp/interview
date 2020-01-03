@@ -1,4 +1,18 @@
-# Javascript Engine
+# 자바스크립트
+
+**Contents**
+
+- [Javascript Engine](#Javascript-Engine)
+- [Call Stack](#Call-Stack)
+- [Task Queue와 Event Loop](#Task-Queue와-Event-Loop)
+- [원시 타입(Primitive Type)](<#원시-타입(Primitive-Type)>)
+- [객체(Object)](<#객체(Object)>)
+- [호이스팅](#호이스팅)
+- [클로저](#클로저)
+
+</br>
+
+## Javascript Engine
 
 js를 해석하는 `javascipt engine`과 `rendering engine`은 다른 것이다.
 javascipt engine은 js코드를 해석하고 실행하는 인터프리터로 V8, 라이노 등이 있다.
@@ -11,17 +25,17 @@ V8같은 js엔진은 단일호출스택(call stack)을 사용하며 요청이 �
 
 Node.js 환경도 브라우저 환경과 비슷하게 libuv라이브러리가 이벤트루프를 지원한다. js engine(V8)은 비동기 작업을 위해 node.js의 api를 호출하고, 이때 넘겨진 콜백은 libuv의 이벤트루프를 통해 스케줄 되고 실행된다.
 
-# Call Stack
+## Call Stack
 
 js는 하나의 호출스택을 사용한다. 요청이 들어오면 순서대로 call stack에 쌓이고 함수의 실행이 끝나면 pop된다. 콜스택이 한개이기 때문에 함수가 실행되면 이 함수가 끝나기 전까지는 어떠한 다른 작업도 할 수 없다. (Run to Completion)
 
-# Task Queue/Call Stack
+## Task Queue와 Event Loop
 
 js에서 모든 비동기 api는 작업이 완료되면 콜백함수를 task queue에 추가한다.
 이벤트루프는 현재 실행중인 task가 없는지, task queue에 task가 있는지를 반복적으로 확인한다.
 콜스택이 비워진 것을 확인하면 이벤트 루프가 task queue의 task를 실행해 콜스택에 추가한다.
 
-## Promise와 Event Loop
+### Promise와 Event Loop
 
 Promise는 microtask를 사용한다. microtask는 일반 task볻 더 높은 우선순위를 갖는 task이다. Task Queue에 이미 대기중인 task가 있어도 microtask가 먼저 실행된다.
 
@@ -38,7 +52,7 @@ Promise.resolve()
   });
 ```
 
-# 원시 타입(Primitive Type)
+## 원시 타입(Primitive Type)
 
 자바스크립트에는 6가지 종류의 원시 데이터 타입이 있다. 원시 데이터 타입은 쉽게 말하자면 자바스크립트에서 **객체가 아닌 것들**이며 **값 그 자체로 저장**된 것 이다. 마치 atom과 같다.
 
@@ -60,7 +74,7 @@ Promise.resolve()
 (function () {}) === (function () {});  // false
 ```
 
-## 객체(Object)
+### 객체(Object)
 
 객체는 원시타입은 아니지만 자바스크립트의 타입값 중 하나이다.
 
@@ -98,9 +112,9 @@ a.toUpperCase(); // "ABC"
 
 [reference](https://poiemaweb.com/js-built-in-object)
 
-# Garbage Collection
+## Garbage Collection
 
-# 호이스팅
+## 호이스팅
 
 호이스팅이란 컴파일 시점에서 변수(var)와 함수 `선언문`을 실행 문맥(컨텍스트)/스코프? 에 저장하고 이후 코드가 실행되는 것을 말한다. (실행단계에서 초기화가 이루어진다.)
 
@@ -143,7 +157,7 @@ foo2 = function() {
 호이스팅은 함수선언문과 함수표현식에서 서로 다르게 동작한다.
 변수에 할당된 함수표현식은 끌어 올려지지 않기 때문에 변수의 스코프 규칙을 그대로 따른다.
 
-## 자바스크립트의 컴파일 과정
+### 자바스크립트의 컴파일 과정
 
 자바스크립트 엔진은 코드를 실행하기 직전에 컴파일을 하는데, 이과정에서 엔진은 `var a = 2`라는 구문을 다음과 같이 두단계로 나눈다.
 
@@ -157,7 +171,7 @@ foo2 = function() {
 
 [스코프와 호이스팅](https://meetup.toast.com/posts/86)
 
-# 클로저
+## 클로저
 
 특정 함수가 참조하는 변수들이 선언된 렉시컬 스코프(lexical scope)는 계속 유지되는데, 그 함수와 스코프를 묶어서 클로저라고 한다.
 클로저가 나타나는 가장 기본적인 환경은 함수 안에 함수가 선언되었을 때. 즉, 스코프 안에 스코프가 있을 때.
