@@ -45,7 +45,31 @@ const Graph = {
 
     console.log("탐색 순서:", this.path);
   },
-  dfs: function(startNode) {},
+  dfs: function(startNode) {
+    this.stack = [];
+    this.visitedList = [];
+    this.path = [];
+
+    const doDfs = node => {
+      const adjacency = this.adjacencyList[node];
+      adjacency.forEach(adjacentNode => {
+        if (this.visitedList.indexOf(adjacentNode) === -1) {
+          this.stack.push(adjacentNode);
+        }
+      });
+    };
+
+    this.stack.push(startNode);
+
+    while (this.stack.length > 0) {
+      let searchNode = this.stack.pop();
+      this.visitedList.push(searchNode);
+      this.path.push(searchNode);
+      doDfs(searchNode);
+    }
+
+    console.log("탐색 순서:", this.path);
+  },
   showList: function() {
     console.log(this.adjacencyList);
   },
@@ -74,39 +98,40 @@ myGraph1.addEdge("d", "f");
 myGraph1.showList();
 
 myGraph1.bfs("a");
+myGraph1.dfs("a");
 
-const myGraph2 = Object.create(Graph);
-myGraph2.init();
-myGraph2.addNode(0);
-myGraph2.addNode(1);
-myGraph2.addNode(2);
-myGraph2.addNode(3);
-myGraph2.addNode(4);
-myGraph2.addNode(5);
+// const myGraph2 = Object.create(Graph);
+// myGraph2.init();
+// myGraph2.addNode(0);
+// myGraph2.addNode(1);
+// myGraph2.addNode(2);
+// myGraph2.addNode(3);
+// myGraph2.addNode(4);
+// myGraph2.addNode(5);
 
-myGraph2.addEdge(0, 1);
-myGraph2.addEdge(0, 2);
-myGraph2.addEdge(1, 2);
-myGraph2.addEdge(1, 3);
-myGraph2.addEdge(2, 3);
-myGraph2.addEdge(3, 4);
-myGraph2.addEdge(4, 1);
-myGraph2.addEdge(4, 0);
-myGraph2.addEdge(4, 5);
+// myGraph2.addEdge(0, 1);
+// myGraph2.addEdge(0, 2);
+// myGraph2.addEdge(1, 2);
+// myGraph2.addEdge(1, 3);
+// myGraph2.addEdge(2, 3);
+// myGraph2.addEdge(3, 4);
+// myGraph2.addEdge(4, 1);
+// myGraph2.addEdge(4, 0);
+// myGraph2.addEdge(4, 5);
 
-myGraph2.bfs(0);
+// myGraph2.bfs(0);
 
-const myGraph3 = Object.create(Graph);
-myGraph3.init();
-myGraph3.addNode("a");
-myGraph3.addNode("b");
-myGraph3.addNode("c");
-myGraph3.addNode("d");
-myGraph3.addNode("e");
+// const myGraph3 = Object.create(Graph);
+// myGraph3.init();
+// myGraph3.addNode("a");
+// myGraph3.addNode("b");
+// myGraph3.addNode("c");
+// myGraph3.addNode("d");
+// myGraph3.addNode("e");
 
-myGraph3.addEdge("a", "b");
-myGraph3.addEdge("a", "d");
-myGraph3.addEdge("b", "c");
-myGraph3.addEdge("c", "e");
+// myGraph3.addEdge("a", "b");
+// myGraph3.addEdge("a", "d");
+// myGraph3.addEdge("b", "c");
+// myGraph3.addEdge("c", "e");
 
-myGraph3.bfs("a");
+// myGraph3.bfs("a");
