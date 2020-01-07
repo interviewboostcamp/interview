@@ -1,5 +1,42 @@
 # 네트워크
 
+- [HTTPS](<#HTTP-+-S(Secure)>)
+
+## TCP/IP
+
+TCP/IP는 IP프로토콜을 사용하는 인터넷 통신에서 사용되고 있는 프로토콜의 집합이다.
+총 4계층으로 계층화되어 있다.
+
+> WHY? 마치 MSA처럼 여러 계층을 둠으로써 바꾸고 싶은 계층의 로직만 바꿀 수 있고 설계가 편한 장점이 있기 때문
+> ![](https://www.guru99.com/images/1/102219_1135_TCPIPvsOSIM1.png)
+
+## IP(Internet Protocol)
+
+개개의 패킷을 목적지까지 배송하는 역할을 한다.
+수신지의 MAC주소를 헤더에 추가한다.
+![](http://www.ktword.co.kr/img_data/5185_1.JPG)
+IP통신은 수신지의 IP주소를 바탕으로 ARP()를 사용해 다음으로 중계할 곳의 MAC주소를 사용해 목적지까지 찾아간다.
+
+## TCP
+
+### 3way-handshaking
+
+## HTTP
+
+### 상태를 계속 유지하지 않는 STATELESS 프로토콜이다
+
+이전에 보낸 response, request를 기억하지 않는다.
+
+> why? 통신간 연결 상태 처리, 진행중인 송수신에 관한 state 저장 등을 관리할 필요가 없어서 서버 디자인이 간단하고 확장이 용이하기 때문
+
+### 지속 연결(persistent connection)로 접속량 절약
+
+하나의 HTML문서에 여러개의 이미지가 포함되어 있다고 가정해보자. 클라이언트는 html코드를 받아온 뒤 이미지를 획득하기 위해 추가로 여러 request를 보내야 한다.
+또한 HTTP 초기버전에는 한번 통신할 때 마다 TCP 커넥션을 생성하고 해제했기때문에 다량의 request를 보낼 경우 통신량이 늘고 오버헤드가 생겼다.
+![](https://upload.wikimedia.org/wikipedia/commons/thumb/d/d5/HTTP_persistent_connection.svg/1024px-HTTP_persistent_connection.svg.png)
+
+> 왼쪽 그림처럼 한번 http통신이 끝나면 커넥션을 닫고 다시 커넥션을 열어 통신을 했다.
+
 ## HTTP + S(Secure)
 
 HTTPS는 HTTP의 문제점을 보완하기 위해 나온 프로토콜이다. HTTP의 보안적인 문제점은 다음과 같다.
