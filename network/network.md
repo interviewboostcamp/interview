@@ -1,5 +1,16 @@
 # 네트워크
 
+- [TCP/IP](#TCP/IP)
+- [IP(Internet Protocol)](<#IP(Internet-Protocol)>)
+- [TCP](#TCP)
+  - [3-way-handshaking](#3-way-handshaking)
+- [HTTP](#HTTP)
+  - [STATELESS](#상태를-계속-유지하지-않는-STATELESS-프로토콜이다)
+  - [지속 연결](<#지속-연결(persistent-connection)로-접속량-절약>)
+  - [Cookie](#Cookie를-사용한-상태-관리)
+  - [HTTP 메세지 인코딩](#HTTP-메세지-인코딩)\
+  - [Multipart](Multipart)
+  - [웹 서버](#웹-서버)
 - [HTTPS](<#HTTP-+-S(Secure)>)
 
 ## TCP/IP
@@ -8,18 +19,26 @@ TCP/IP는 IP프로토콜을 사용하는 인터넷 통신에서 사용되고 있
 총 4계층으로 계층화되어 있다.
 
 > WHY? 마치 MSA처럼 여러 계층을 둠으로써 바꾸고 싶은 계층의 로직만 바꿀 수 있고 설계가 편한 장점이 있기 때문
-> ![](https://www.guru99.com/images/1/102219_1135_TCPIPvsOSIM1.png)
+
+![](https://www.guru99.com/images/1/102219_1135_TCPIPvsOSIM1.png)
 
 ## IP(Internet Protocol)
 
-개개의 패킷을 목적지까지 배송하는 역할을 한다.
-수신지의 MAC주소를 헤더에 추가한다.
+개개의 패킷을 목적지까지 배송하는 역할을 한다.\
+수신지의 MAC주소를 추가한다. --> 이건 링크 계층에서 하는거 아닌가?
+
 ![](http://www.ktword.co.kr/img_data/5185_1.JPG)
+
 IP통신은 수신지의 IP주소를 바탕으로 ARP()를 사용해 다음으로 중계할 곳의 MAC주소를 사용해 목적지까지 찾아간다.
 
 ## TCP
 
-### 3way-handshaking
+### 3-way-handshaking
+
+클라이언트(어플리케이션)가 Socket Library에게 소캣 생성을 요청한다. 소켓 라이브러리는 소켓을 생성하고 소켓을 구별할 수 있는 `디스크립터`를 어플리케이션에게 반환한다.
+
+`connect(<디스크립터>, 서버ip, 서버 port)`를 실행하면 소켓간 연결을 시도한다.
+서버의 소켓과 제어정보(TCP헤더)를 주고 받아 서로의 소켓에 필요한 정보들을 저장해 송수신이 가능한 상태로 만든다.
 
 ## HTTP
 
@@ -33,9 +52,83 @@ IP통신은 수신지의 IP주소를 바탕으로 ARP()를 사용해 다음으�
 
 하나의 HTML문서에 여러개의 이미지가 포함되어 있다고 가정해보자. 클라이언트는 html코드를 받아온 뒤 이미지를 획득하기 위해 추가로 여러 request를 보내야 한다.
 또한 HTTP 초기버전에는 한번 통신할 때 마다 TCP 커넥션을 생성하고 해제했기때문에 다량의 request를 보낼 경우 통신량이 늘고 오버헤드가 생겼다.
+
 ![](https://upload.wikimedia.org/wikipedia/commons/thumb/d/d5/HTTP_persistent_connection.svg/1024px-HTTP_persistent_connection.svg.png)
 
 > 왼쪽 그림처럼 한번 http통신이 끝나면 커넥션을 닫고 다시 커넥션을 열어 통신을 했다.
+
+이런 문제를 해결하기 위해 어느 한 쪽이 명시적으로 연결을 종료하지 않는 이상 TCP연결을 유지하는 `지속 연결`이라는 방법이 생겼다.
+
+HTTP 1.0에서는 `Connection: keep-alive`라는 헤더를 붙여줘야지만 지속 연결을 사용할 수 있다.
+HTTP 1.1부터는 지속 연결이 디폴트이다.
+
+반복적인 TCP 커넥션 연결과 종료로 인한 오버헤드를 줄여주어 서버 부하가 낮아지고 HTTP통신이 빨라지는 장점이 있다.
+
+또한 지속연결은 RESPONSE를 기다리지 않고 여러 REQUEST를 보낼 수 있도록 HTTP 1.1부터 `파이프라이닝`을 지원한다.
+
+![](https://t1.daumcdn.net/cfile/tistory/993666415BC2DD3231)
+
+파이프라이닝이 적용되면, 하나의 Connection 으로 다수의 Request 와 Response 를 처리할 수 있게끔 Network Latency 를 줄일 수 있다.
+
+하지만 완전한 멀티플렉싱이 아닌 응답처리를 미루는 방식이므로 각 응답의 처리는 순차적으로 처리되며, 결국 후순위의 응답은 지연될 수 밖에 없다. HTTP 파이프라이닝은 HTTP/2 가 등장하면서 멀티플렉싱 알고리즘으로 대체되었고, 모던 브라우저들에서도 기본적으로는 활성화하지 않고 있다
+
+### Cookie를 사용한 상태 관리
+
+HTTP는 Stateless Protocol이다. 수많은 클라이언트들의 상태를 서버가 전부 관리하는 것은 매우 힘들고 리소스 낭비가 심하다.
+
+HTTP의 Stateless 특징을 남겨둔 채 클라이언트의 상태를 파악하기 위해서 Cookie를 도입하였다.
+
+![](그림1.png)
+![](그림2.png)
+
+### HTTP 메세지 인코딩
+
+**1. Content Coding**
+
+엔티티 정보를 작게 압축하여 전송한다.
+
+gzip, compress, deflate, identity
+
+**2. Chuncked Transfer Coding**
+
+엔티티 바디를 청크로 분해해 송신한다.
+
+> 엔티티란 무엇인가?
+
+### Multipart
+
+HTTP 메세지 Body 내부에 엔티티를 여러개 포함시켜 여러 종류의 데이터를 송신할 수 있도록 한다.
+
+**1. multipart/form-data**
+
+web폼으로부터 파일 업로드에 사용
+
+**2. multipart/bytearanges**
+상태코드 `206` response message가 복수 범위의 내용을 포함할 때 사용한다.
+
+## 웹 서버
+
+### Proxy
+
+서버와 클라이언트 사이에서 req, res를 전송한다. 프록시서버를 여러개 경유하는 것도 가능하다(Via 헤더 필드)
+
+> why? 캐싱을 위해, 특정 웹사이트에 대한 엑세스 제한을 위해 사용
+
+**캐싱 프록시**
+
+response 중계시 프록시 서버 상에 resource 캐시를 보관하는 프록시. 같은 resource에 대해 request가 온 경우 오리진 서버에게 응답 요청을 하지 않고 프록시에서 캐시를 response로 돌려준다.
+
+**투명 프록시**
+
+req, res 중계시 메세지를 변경하지 않는 프록시.
+
+### Gateway
+
+프록시와 유사하게 동작하며 HTTP 이외의 통신을 하는 서버와 통신한다.
+
+### 터널
+
+client는 SSL과 같은 암호화 통신을 통해 서버와 안전하게 통신하기 위해 터널을 사용한다.
 
 ## HTTP + S(Secure)
 
