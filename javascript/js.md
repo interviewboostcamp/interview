@@ -9,6 +9,7 @@
 - [객체(Object)](#객체Object)
 - [값 vs 레퍼런스 복사](#값-vs-레퍼런스-복사)
 - [Garbage Collection](#Garbage-Collection)
+- [스코프](#스코프)
 - [호이스팅](#호이스팅)
 - [클로저](#클로저)
 
@@ -112,7 +113,9 @@ var a = new String("Abc");
 typeof a; // "object"     !!string이 아니다!!
 ```
 
-자바스크립트는 원시값을 알아서 해당 객체 래퍼로 래핑해주기 때문에 다음과 같은 코드가 가능하다.
+네이티브는 `생성자` 처럼 사용할 수 있지만 실제로 생성되는 결과물은 `원시 값(primitive)를 감싼 객체(object) 래퍼` 입니다.
+**자바스크립트는 원시값을 알아서 해당 네이티브로 `박싱`해주기 때문에 다음과 같은 코드가 가능하다.**
+원시 값에서 바로 객체 레퍼의 함수를 사용할 수 있다.
 
 ```js
 var a = "abc";
@@ -352,3 +355,96 @@ if (woody.showBattery() == 10)
 if (woody.bttery === undefined)
   console.log("하지만 private변수에 직접 접근은 불가능 하다");
 ```
+
+## 프로토타입
+
+```js
+function Foo() {}
+```
+
+함수를 정의하면 함수만 생성되는 것이 아니라 `Prototype Object`도 같이 생성이 된다.
+
+![image.png](https://images.velog.io/post-images/adam2/970d2010-32e9-11ea-8e4f-dda7a26d676e/image.png)
+
+Prototype Object는 기본속성으로 `constructor`와 `__proto__`를 가지고 있다. (따라서 정확히 말하자면 Foo.prototype 객체가 프로토타입을 의미하는것은 아니다. constructor도 가지고 있으니! )
+
+- **constructor**는 내가 선언한 생성자 함수(Foo)를 가리킨다. new 키워드와 함께 함수를 호출할 경우 constructor함수를 실행하고 부수효과로 "객체"가 생성된다.
+
+- **prototype**은 생성자 함수에 정의한 모든 객체가 공유할 **원형**이다.
+- `__proto__`는 [[Prototype]]링크이다. 생성자 함수에 정의해두었던 prototype을 참조한다.
+
+```js
+const f = new Foo();
+Object.getPrototypeOf(f) === Foo.prototype; // true
+```
+
+![image.png](https://images.velog.io/post-images/adam2/11724c50-32ee-11ea-9de7-5b60278cfbd1/image.png)
+
+![Untitled-f837623b-c1d2-4ff0-ab2b-1fba6dd88352.png](https://images.velog.io/post-images/adam2/fb66d520-fd8c-11e9-9881-1f0bd327923e/Untitled-f837623b-c1d2-4ff0-ab2b-1fba6dd88352.png)
+
+![image.png](https://images.velog.io/post-images/adam2/59f64b20-32ee-11ea-9de7-5b60278cfbd1/image.png)
+
+`prototype`은 생성자 함수에 사용자가 직접 넣는 거고, `__proto__` 는 new를 호출할 때 prototype을 참조하여 자동으로 만들어진다.
+
+생성자 함수에는 `prototype`에, 생성자로부터 만들어진 객체에는 `__proto__`에 생성자의 prototype이 들어간다.
+
+`new` Foo()로써 만들어진 모든 객체(`f`)는 결국 **Foo.prototype 객체**와 내부적으로 **[[Prototype]]링크**로 연결된다.
+**결국 `f` 와 `Foo` 는 상호 연결된 두개의 객체가 된다.**
+
+![Untitled-2a35c021-b5ac-44aa-8880-43a0eb1f5480.png](https://images.velog.io/post-images/adam2/00bec870-fd8d-11e9-9881-1f0bd327923e/Untitled-2a35c021-b5ac-44aa-8880-43a0eb1f5480.png)
+
+### new 연산자
+
+객체지향언어에서 클래스를 인스턴스화 하기 위해 `new 연산자`를 사용한다. 그리고 자바스크립트에서도 두개의 객체를 연결하기 위해 new연산자를 사용한다.
+
+하지만 전자의 경우 클래스로부터 작동을 **복사**하여 새로운 객체를 만드는 것이고, 후자의 경우 복사 과정 없이 **그저 두 객체를 연결**한 것이 전부이다.
+따라서 자바스크립트의 new 키워드는 우리가 흔히 아는 new키워드와 다르게 동작한다는걸 알 수 있다.
+
+js에서 new연산자는 결국 **새 객체를 다른 객체와 연결하기 위한 간접적인 우회 방법**이고, `Object.create()`를 이용해 직접적으로 객체를 연결해주는 방법도 있다.
+
+> **[[Prototype]] 체계**를 흔히들 **프로퍼타입 상속**이라고 부른다. 하지만 상속은 기본적으로 **복사**를 수반하지만, 자바스크립트는 객체 프로퍼티를 복사하지 않는다. 따라서 프로퍼타입 상속은 의미를 더 햇갈리게 만드는 단어의 조합이고, `위임`이야말로 자바스크립트 객체-연결 체계를 훨씬 더 정확하게 나타내는 용어라고 할 수 있다.
+
+### 생성자
+
+앞 예제에서 new를 붙여 Foo함수를 호출하여 객체가 "생성"되는 현장을 목격했으니 Foo를 생성자라고 믿고 싶은 욕망을 버리기란 쉽지 않다.
+
+하지만 Foo는 생성자가 아니다. 그저 **함수**일 뿐이다.
+
+함수는 결코 생성자가 아니지만 new를 붙여 호출하는 순간 이 함수는 `생성자 호출`을 한다. `new키워드`는 일반 함수 호출 도중에 원래 수행할 작업 외에 `객체 생성`이라는 잔업을 더 부과하는 지시자인 것이다.
+
+```js
+function nothing() {
+  console.log(`그저 함수입니다`);
+}
+
+const a = new nothing();
+// "그저 함수입니다"
+a; // {}
+```
+
+![image.png](https://images.velog.io/post-images/adam2/c6b44690-32ee-11ea-9de7-5b60278cfbd1/image.png)
+
+평범한 함수인 nothing을 new로 호출함으로써 **_객체가 생성_** 되고 부수효과로 생성된 그 객체를 a에 할당하는 것이다. 이것을 보통 생성자(constructor) 호출 이라고 부르지만 nothing함수 자체는 생성자가 아니다.
+
+즉, 자바스크립트는 앞에 new를 붙여 호출한 함수를 모두 **생성자**라고 할 수 있다. 함수는 결코 생성자가 아니지만 new를 사용하여 호출할 때에만 **생성자 호출**이다.
+
+### 정리
+
+객체에 존재하지 않는 프로퍼티를 접근하려 시도하면 해당 객체의 내부 [[Prototype]] 링크를 따라 다음 수색 장소를 결정한다. 모든 일반 객체의 최상위 프로토타입 연쇄는 내장 `Object.prototype`이고 이 지점에서도 찾지 못하면 탐색이 종료된다.
+
+두 객체를 서로 연결짓는 가장 일반적인 방법은 함수 호출 시 `new`키워드를 앞에 붙이는 것이다.
+new키워드는 `일반 함수 호출 + "객체" 생성`이라는 잔업을 더 부과하는 지시자이다.
+`const f = new Foo()`를 실행하면 Foo 함수가 실행되고, 객체가 생성되어 변수 f
+에 할당된다.
+
+```
+typeof f // object
+typeof Foo //function
+```
+
+- `constructor`는 생성자 함수 그 자체를 가리킴
+- `prototype`은 생성자 함수에 정의한 모든 객체가 공유할 원형
+- `__proto__`는 생성자 함수를 new로 호출할 때, 정의해두었던 prototype을 참조한 객체
+- prototype은 생성자 함수에 사용자가 직접 넣는 거고, **proto**는 new를 호출할 때 prototype을 참조하여 자동으로 만들어짐
+- 생성자에는 prototype, 생성자로부터 만들어진 객체에는 **proto**
+- 따라서 사용자는 prototype만 신경쓰면 된다. **proto**는 prototype이 제대로 구현되었는지 확인용으로 사용한다.
