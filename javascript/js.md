@@ -15,7 +15,8 @@
 - [프로토타입](#프로토타입)
   - [생성자](#생성자)
   - [new 연산자](#new-연산자)
-    </br>
+
+</br>
 
 ## Javascript Engine
 
@@ -450,3 +451,50 @@ typeof Foo //function
 - prototype은 생성자 함수에 사용자가 직접 넣는 거고, **proto**는 new를 호출할 때 prototype을 참조하여 자동으로 만들어짐
 - 생성자에는 prototype, 생성자로부터 만들어진 객체에는 **proto**
 - 따라서 사용자는 prototype만 신경쓰면 된다. **proto**는 prototype이 제대로 구현되었는지 확인용으로 사용한다.
+
+### ES6 클래스와 ES5 함수 생성자의 차이점
+
+클래스는 함수처럼 호출될 수 없고, 호이스팅도 적용되지 않습니다. 클래스간 상속 관계에서는 super 기능을 이용할 수 있습니다.
+
+생성자의 주요 차이점은 상속을 사용할 때 발생합니다.
+
+우선 부모클래스의 생성자를 호출해야하고, 자식의 prototype에 부모의 prototype을 연결지어줍니다. 그 후 명시적으로 자식의 prototype object애 constructor를 자신의 생성자로 선언해줘야 합니다.
+
+반면 클래스 문법에서는 extends 키워드와 super()메소드로 간편하게 상속이 가능해집니다.
+
+```js
+// ES5 함수 생성자
+function Person(name) {
+  this.name = name;
+}
+
+// ES6 클래스
+class Person {
+  constructor(name) {
+    this.name = name;
+  }
+}
+```
+
+````js
+    // ES5 함수 생성자
+    function Student(name, studentId) {
+      // 수퍼 클래스의 생성자를 호출하여 수퍼 클래스에서 상속된 멤버를 초기화합니다.
+      Person.call(this, name)
+
+      // 서브 클래스의 멤버를 초기화합니다.
+      this.studentId = studentId
+    }
+
+    Student.prototype = Object.create(Person.prototype)
+    Student.prototype.constructor = Student
+
+    // ES6 클래스
+    class Student extends Person {
+      constructor(name, studentId) {
+        super(name)
+        this.studentId = studentId
+      }
+    }
+    ```
+````
