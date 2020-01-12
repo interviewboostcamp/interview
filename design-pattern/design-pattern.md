@@ -18,34 +18,32 @@
 
 ### 구현
 
-```
+```js
 function makeInstance() {
-    return {
-        a: 1
-    }
+  return {
+    a: 1
+  };
 }
 
 let instance;
 
 function singleton() {
-    this.instance = init();
+  this.instance = init();
 }
-const init = function () {
-    if (!instance) {
-        instance = makeInstance();
-    }
-    return instance;
-}
+const init = function() {
+  if (!instance) {
+    instance = makeInstance();
+  }
+  return instance;
+};
 
-singleton.prototype.getInstance = function () {
-
-    return this.instance;
-}
+singleton.prototype.getInstance = function() {
+  return this.instance;
+};
 
 const test = new singleton();
 const test2 = new singleton();
 console.log(test.getInstance() === test2.getInstance());
-
 ```
 
 ## 옵저버
@@ -71,58 +69,57 @@ subject와 observer 두 객체가 느슨하게 결합되어있다. 즉, 둘이 �
 싱글톤 패턴과 혼합해 구현.
 subject 객체를 싱글톤으로 관리한다.
 
-```
+```js
 let instance;
 
 function singletonSubject() {
-    return init();
+  return init();
 }
 
 function makeInstance() {
-    return new subject();
+  return new subject();
 }
 
-const init = function () {
-    if (!instance) {
-        instance = makeInstance();
-    }
-    return instance;
-}
+const init = function() {
+  if (!instance) {
+    instance = makeInstance();
+  }
+  return instance;
+};
 
 function subject() {
-    this.observers = [];
+  this.observers = [];
 }
 
-subject.prototype.publish = function () {
-    this.observers.forEach(observer => observer.getMessage())
-}
+subject.prototype.publish = function() {
+  this.observers.forEach(observer => observer.getMessage());
+};
 
-subject.prototype.register = function (observer) {
-    this.observers.push(observer)
-}
+subject.prototype.register = function(observer) {
+  this.observers.push(observer);
+};
 
 function observer(name) {
-    this.name = name;
+  this.name = name;
 }
 
-observer.prototype.subscribe = function () {
-    const subject = new singletonSubject()
-    subject.register(this)
-}
+observer.prototype.subscribe = function() {
+  const subject = new singletonSubject();
+  subject.register(this);
+};
 
-observer.prototype.getMessage = function () {
-    console.log(`${this.name} get Message`)
-}
+observer.prototype.getMessage = function() {
+  console.log(`${this.name} get Message`);
+};
 
 const subjectInstance = new singletonSubject();
-const observer1 = new observer('observer1');
-const observer2 = new observer('observer2');
-const observer3 = new observer('observer3');
+const observer1 = new observer("observer1");
+const observer2 = new observer("observer2");
+const observer3 = new observer("observer3");
 
 observer1.subscribe();
 observer2.subscribe();
 observer3.subscribe();
 
 subjectInstance.publish();
-
 ```

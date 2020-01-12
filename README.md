@@ -57,7 +57,12 @@
   - 생성자
   - new 연산자
 
-# [WEB](/network/web.md)
+## [WEB](/network/web.md)
 
 - POST, GET 방식의 차이점
 - CORS
+
+## [디자인 패턴](/design-pattern/design-pattern.md)
+
+- 싱글톤
+- 옵저버
