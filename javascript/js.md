@@ -298,15 +298,15 @@ js는 실행 컨텍스트가 활성화 되는 시점에 호이스팅을 하고(e
 
 -Deep한 버전-
 
-실행 컨텍스트에는 크게 세가지 정보가 있는데요, variableEnvironment, LexicalEnvironment, thisBinding입니다.
+실행 컨텍스트에는 크게 세가지 정보가 있는데요, `variableEnvironment`, `LexicalEnvironment`, `thisBinding입니다`.
 
-variableEnvironment에는 현재 실행 컨텍스트 내의 식별자 정보(environmentRecord)와 외부 환경에 대한 정보(outerEnvrionmentReference)를 저장합니다.
+`variableEnvironment에는` 현재 실행 컨텍스트 내의 식별자 정보(`environmentRecord`)와 외부 환경에 대한 정보(`outerEnvrionmentReference`)를 저장합니다.
 
-이 variableEnvironment를 똑같이 복사한 것이 lexicalEnvironment이고 이 안의 정보들에 변경사항이 실시간으로 반영됩니다.
+이 `variableEnvironment`를 똑같이 복사한 것이 `lexicalEnvironment`이고 이 안의 정보들에 변경사항이 실시간으로 반영됩니다.
 
-thisBinding에는 this식별자가 바라봐야 할 대상 객체를 저장합니다 .
+`thisBinding`에는 this식별자가 바라봐야 할 대상 객체를 저장합니다 .
 
-<table border="1" >
+<table>
  <tr>
     <td rowspan="6"> 실행 컨텍스트</td>
   </tr>
