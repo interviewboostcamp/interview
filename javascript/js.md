@@ -10,6 +10,10 @@
 - [값 vs 레퍼런스 복사](#값-vs-레퍼런스-복사)
 - [Garbage Collection](#Garbage-Collection)
 - [스코프](#스코프)
+  - [자바스크립트의 컴파일 과정](#자바스크립트의-컴파일-과정)
+  - [스코프 체인](#스코프-체인)
+- [실행 컨텍스트](#실행-컨텍스트)
+- [this 바인딩](#this-바인딩)
 - [호이스팅](#호이스팅)
 - [클로저](#클로저)
 - [프로토타입](#프로토타입)
@@ -301,6 +305,29 @@ variableEnvironment에는 현재 실행 컨텍스트 내의 식별자 정보(env
 이 variableEnvironment를 똑같이 복사한 것이 lexicalEnvironment이고 이 안의 정보들에 변경사항이 실시간으로 반영됩니다.
 
 thisBinding에는 this식별자가 바라봐야 할 대상 객체를 저장합니다 .
+
+<table border="1" >
+ <tr>
+    <td rowspan="6"> 실행 컨텍스트</td>
+  </tr>
+  <tr>
+    <td rowspan="2"> variableEnvironment</td>
+    <td>environmentRecord</td>
+  </tr>
+  <tr>
+    <td>outerEnvrionmentReference</td>
+  </tr>
+  <tr>
+    <td rowspan="2">lexicalEnvironment</td>
+    <td>environmentRecord</td>
+  </tr>
+  <tr>
+    <td>outerEnvrionmentReference</td>
+  </tr>
+  <tr>
+    <td>thisBinding</td>
+  </tr>
+</table>
 
 ## this 바인딩
 
