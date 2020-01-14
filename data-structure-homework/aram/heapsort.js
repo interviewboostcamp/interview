@@ -30,7 +30,6 @@ function heapSort(arr) {
   const sortedArr = [];
   while (heap.length > 0) {
     sortedArr.push(heap.shift());
-
     const min = heap.pop();
     heap.unshift(min);
 
